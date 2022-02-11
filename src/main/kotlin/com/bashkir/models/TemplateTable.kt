@@ -1,7 +1,7 @@
 package com.bashkir.models
 
-import com.bashkir.StringEntityClass
-import com.bashkir.StringIdTable
+import com.bashkir.extensions.StringEntityClass
+import com.bashkir.extensions.StringIdTable
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.jetbrains.exposed.dao.Entity

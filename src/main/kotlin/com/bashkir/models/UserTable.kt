@@ -1,7 +1,7 @@
 package com.bashkir.models
 
-import com.bashkir.StringEntityClass
-import com.bashkir.StringIdTable
+import com.bashkir.extensions.StringEntityClass
+import com.bashkir.extensions.StringIdTable
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.jetbrains.exposed.dao.Entity
@@ -27,6 +27,7 @@ class User(id: EntityID<String>) : Entity<String>(id) {
     var role by Role optionalReferencedOn UserTable.role
     val familiarize by Familiarize.referrersOn(FamiliarizeTable.user)
     val agreement by Agreement.referrersOn(AgreementTable.user)
+    val tasks by Performer.referrersOn(PerformerTable.user)
 
     @Serializable
     data class Model(@Transient val model: User? = null) {
@@ -38,6 +39,7 @@ class User(id: EntityID<String>) : Entity<String>(id) {
         val role = model!!.role?.id?.value
         val familiarize = model!!.familiarize.map{ it.toModel()}
         val agreement = model!!.agreement.map{ it.toModel()}
+        val tasks = model!!.tasks.map{ it.toModel()}
     }
 
     fun toModel(): Model = Model(this)

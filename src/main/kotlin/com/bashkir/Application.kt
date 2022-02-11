@@ -1,8 +1,10 @@
 package com.bashkir
 
+import com.bashkir.extensions.configureKoin
 import com.bashkir.plugins.configureRouting
 import com.bashkir.plugins.configureSerialization
-import io.ktor.server.application.*
+import io.ktor.application.*
+
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -11,4 +13,5 @@ fun main(args: Array<String>): Unit =
 fun Application.module() {
     configureRouting()
     configureSerialization()
+    configureKoin()
 }
