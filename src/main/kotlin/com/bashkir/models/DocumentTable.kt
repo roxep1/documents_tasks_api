@@ -1,0 +1,47 @@
+package com.bashkir.models
+
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.javatime.datetime
+
+object DocumentTable : IntIdTable("documents", "documents_id") {
+    val template = reference("template_id", TemplateTable).nullable()
+    val author = reference("author", UserTable)
+    val title = varchar("title", 200)
+    val file = text("file")
+    val desc = varchar("description", 300).nullable()
+    val created = datetime("created")
+}
+
+
+class Document(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Document>(DocumentTable)
+
+    var template by Template optionalReferencedOn DocumentTable.template
+    var author by User referencedOn DocumentTable.author
+    var title by DocumentTable.title
+    var file by DocumentTable.file
+    var desc by DocumentTable.desc
+    var created by DocumentTable.created
+    val familiarize by Familiarize.referrersOn(FamiliarizeTable.document)
+    val agreement by Agreement.referrersOn(AgreementTable.document)
+
+    @Serializable
+    data class Model(@Transient val model: Document? = null) {
+        val id = model!!.id.value
+        val templateId = model!!.template?.id?.value
+        val authorId = model!!.author.id.value
+        val title = model!!.title
+        val file = model!!.file
+        val desc = model!!.desc
+        val created = model!!.created.toString()
+        val familiarize = model!!.familiarize.map { it.toModel() }
+        val agreement = model!!.agreement.map { it.toModel()}
+    }
+
+    fun toModel(): Model = Model(this)
+}

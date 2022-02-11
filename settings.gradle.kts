@@ -1,0 +1,1 @@
+rootProject.name = "documents_tasks_api"
