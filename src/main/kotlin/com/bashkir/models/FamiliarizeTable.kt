@@ -46,7 +46,7 @@ class Familiarize(id: EntityID<Int>) : IntEntity(id) {
         val id = model!!.id.value
         val userId = model!!.user.id.value
         val documentId = model!!.document.id.value
-        val checked = model!!.checked
+        val familiarized = model!!.checked
         val created = model!!.created.toString()
     }
 }

@@ -15,6 +15,7 @@ object DocumentTable : IntIdTable("documents", "documents_id") {
     val file = text("file")
     val desc = varchar("description", 300).nullable()
     val created = datetime("created")
+    val perform = reference("perform_id", PerformTable).nullable()
 }
 
 
@@ -27,8 +28,9 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
     var file by DocumentTable.file
     var desc by DocumentTable.desc
     var created by DocumentTable.created
-    val familiarize by Familiarize.referrersOn(FamiliarizeTable.document)
-    val agreement by Agreement.referrersOn(AgreementTable.document)
+    var perform by Perform optionalReferencedOn DocumentTable.perform
+    val familiarize by Familiarize referrersOn FamiliarizeTable.document
+    val agreement by Agreement referrersOn AgreementTable.document
 
     @Serializable
     data class Model(@Transient val model: Document? = null) {

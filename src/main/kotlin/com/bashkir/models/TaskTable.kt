@@ -24,7 +24,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
     var created by TaskTable.created
     var deadline by TaskTable.deadline
     var author by User referencedOn TaskTable.author
-    val performers by Performer.referrersOn(PerformerTable.task)
+    val performs by Perform.referrersOn(PerformTable.task)
 
     @Serializable
     data class Model(@Transient val model: Task? = null) {
@@ -34,8 +34,8 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
         val created = model!!.created.toString()
         val deadline = model!!.deadline.toString()
         val authorId = model!!.author.id.value
-        val performers = model!!.performers.map {it.toModel()}
+        val performs = model!!.performs.map {it.toModel()}
     }
 
-    fun toModel(model: Model): Model = Model(this)
+    fun toModel(): Model = Model(this)
 }

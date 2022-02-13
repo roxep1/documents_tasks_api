@@ -23,7 +23,7 @@ object AgreementTable : IntIdTable("agreement") {
         { PGEnum("AgreementStatus", it) })
     val comment = varchar("comment", 300).nullable()
     val created = datetime("created")
-    val statusChanged = datetime("status_changed")
+    val statusChanged = datetime("status_changed").nullable()
 }
 
 class Agreement(id: EntityID<Int>) : IntEntity(id) {
@@ -59,7 +59,7 @@ class Agreement(id: EntityID<Int>) : IntEntity(id) {
         val status = model!!.status
         val comment = model!!.comment
         val created = model!!.created.toString()
-        val statusChanged = model!!.statusChanged.toString()
+        val statusChanged = model!!.statusChanged?.toString()
     }
 
     fun toModel(): Model = Model(this)

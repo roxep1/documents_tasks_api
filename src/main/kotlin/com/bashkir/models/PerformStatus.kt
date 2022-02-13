@@ -1,6 +1,6 @@
 package com.bashkir.models
 
-enum class TaskStatus {
+enum class PerformStatus {
     Waiting,
     InProgress,
     Completed
