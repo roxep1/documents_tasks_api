@@ -18,7 +18,7 @@ object AgreementTable : IntIdTable("agreement") {
     val deadline = datetime("deadline")
     val status = customEnumeration(
         "status",
-        "status",
+        null,
         { value -> AgreementStatus.valueOf(value as String) },
         { PGEnum("AgreementStatus", it) })
     val comment = varchar("comment", 300).nullable()

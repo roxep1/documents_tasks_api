@@ -16,7 +16,7 @@ object PerformTable : IntIdTable("performer") {
     val task = reference("task", TaskTable)
     val status = customEnumeration(
         "status",
-        "status",
+        null,
         { value -> PerformStatus.valueOf(value as String) },
         { PGEnum("TaskStatus", it) })
     val comment = varchar("comment", 300).nullable()
