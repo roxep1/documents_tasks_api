@@ -12,11 +12,12 @@ import org.koin.ktor.ext.inject
 fun Routing.documentRoute() {
     val service: DocumentService by inject()
 
+    get("documents"){
+        call.respond(service.getAllDocuments())
+    }
+
     route("document") {
 
-        get("documents"){
-            call.respond(service.getAllDocuments())
-        }
 
         /* В моделе документа не нужно заполнять created, desc нулабельный.
         В моделях familiarize нужно заполнить только id юзера и документа.
