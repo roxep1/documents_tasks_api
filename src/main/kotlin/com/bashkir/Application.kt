@@ -13,7 +13,7 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-    connectDatabase(user = "", password = "") /* База должна называться documents_tasks */
+    connectDatabase(user = "postgres", password = "123456") /* База должна называться documents_tasks */
     createTables()
     configureRouting()
     configureSerialization()
