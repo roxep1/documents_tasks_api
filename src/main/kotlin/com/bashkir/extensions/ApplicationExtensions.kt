@@ -24,6 +24,8 @@ fun connectDatabase(user: String, password: String) {
 }
 
 fun createTables() = transaction{
+    exec("CREATE TYPE AgreementStatus AS ENUM ('Sent', 'Agreed', 'Declined');")
+    exec("CREATE TYPE PerformStatus AS ENUM ('Waiting', 'InProgress', 'Completed');")
     SchemaUtils.createMissingTablesAndColumns(
         AgreementTable,
         DocumentTable,
