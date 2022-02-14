@@ -39,6 +39,7 @@ class DocumentService {
         }
         doc
     }
+    fun getAllDocuments(): List<Document.Model> = transaction { Document.all().map { it.toModel() } }
 
     fun getDocument(id: Int): Document.Model = transaction { Document[id].toModel() }
 

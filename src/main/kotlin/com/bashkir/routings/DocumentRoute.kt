@@ -14,6 +14,10 @@ fun Routing.documentRoute() {
 
     route("document") {
 
+        get("documents"){
+            call.respond(service.getAllDocuments())
+        }
+
         /* В моделе документа не нужно заполнять created, desc нулабельный.
         В моделях familiarize нужно заполнить только id юзера и документа.
         В моделях agreement не нужно заполнять status, comment, created, statusChanged */
