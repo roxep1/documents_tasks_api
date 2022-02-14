@@ -1,0 +1,1 @@
+web: ./build/install/documents_tasks_api/bin/documents_tasks_api

@@ -42,3 +42,7 @@ dependencies {
     //Connect to postgreSQL
     implementation("org.postgresql:postgresql:42.2.24.jre7")
 }
+
+tasks.create("stage") {
+    dependsOn("installDist")
+}

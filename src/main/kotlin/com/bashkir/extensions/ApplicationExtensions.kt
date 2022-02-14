@@ -9,6 +9,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.logger.Level
 import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
+import java.sql.Connection
+import java.sql.DriverManager
 
 fun Application.configureKoin() {
     install(Koin) {
@@ -23,6 +25,16 @@ fun connectDatabase(user: String, password: String) {
         user = user, password = password
     )
 }
+
+fun connectDatabase() =
+    Database.connect(::getConnection)
+
+private fun getConnection(): Connection {
+    val dbUrl = System.getenv("JDBC_DATABASE_URL")
+    return DriverManager.getConnection(dbUrl)
+}
+
+
 
 fun createTables(enums: Boolean = false) = transaction {
     if(enums){
