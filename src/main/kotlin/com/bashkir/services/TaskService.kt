@@ -11,12 +11,12 @@ class TaskService {
             desc = model.desc
             created = LocalDateTime.now()
             deadline = LocalDateTime.parse(model.deadline)
-            author = User[model.authorId]
+            author = User[model.author.id]
         }
 
         model.performs.forEach { performer ->
             Perform.new {
-                user = User[performer.userId]
+                user = User[performer.user.id]
                 task = Task[performer.taskId]
                 status = PerformStatus.Waiting
                 comment = null

@@ -36,7 +36,7 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
     data class Model(@Transient val model: Document? = null) {
         val id = model!!.id.value
         val templateId = model!!.template?.id?.value
-        val authorId = model!!.author.id.value
+        val author = model!!.author.toModel()
         val title = model!!.title
         val file = model!!.file
         val desc = model!!.desc

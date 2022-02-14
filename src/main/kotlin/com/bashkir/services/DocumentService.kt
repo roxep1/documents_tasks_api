@@ -10,7 +10,7 @@ class DocumentService {
             model.templateId?.let {
                 template = Template[model.templateId]
             }
-            author = User[model.authorId]
+            author = User[model.author.id]
             title = model.title
             file = model.file
             desc = model.desc
@@ -67,4 +67,5 @@ class DocumentService {
     fun addDocumentToPerform(performId: Int, document: Document.Model) = transaction {
         addDocument(document).perform = Perform[performId]
     }
+
 }

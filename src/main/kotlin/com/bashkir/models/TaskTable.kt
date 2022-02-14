@@ -33,7 +33,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
         val desc = model!!.desc
         val created = model!!.created.toString()
         val deadline = model!!.deadline.toString()
-        val authorId = model!!.author.id.value
+        val author = model!!.author.toModel()
         val performs = model!!.performs.map {it.toModel()}
     }
 

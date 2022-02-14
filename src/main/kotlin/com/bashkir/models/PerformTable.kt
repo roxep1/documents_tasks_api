@@ -49,7 +49,7 @@ class Perform(id: EntityID<Int>) : IntEntity(id) {
     @Serializable
     data class Model(@Transient val model: Perform? = null) {
         val id = model!!.id.value
-        val userId = model!!.user.id.value
+        val user = model!!.user.toModel()
         val taskId = model!!.task.id.value
         val status = model!!.status
         val comment = model!!.comment

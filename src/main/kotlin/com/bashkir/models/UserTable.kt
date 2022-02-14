@@ -30,6 +30,7 @@ class User(id: EntityID<String>) : Entity<String>(id) {
 
     @Serializable
     data class Model(@Transient val model: User? = null) {
+        val id = model!!.id.value
         val firstName = model!!.firstName
         val secondName = model!!.secondName
         val middleName = model?.middleName
