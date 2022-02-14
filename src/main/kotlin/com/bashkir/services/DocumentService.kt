@@ -67,10 +67,4 @@ class DocumentService {
     fun addDocumentToPerform(performId: Int, document: Document.Model) = transaction {
         addDocument(document).perform = Perform[performId]
     }
-
-    fun addTemplate(model: Template.Model) = transaction {
-        Template.new(model.name) {
-            file = model.file
-        }
-    }
 }

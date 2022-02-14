@@ -21,4 +21,6 @@ class Template(id: EntityID<String>): Entity<String>(id){
         val name = model!!.id.value
         val file = model!!.file
     }
+
+    fun toModel(): Model = Model(this)
 }
