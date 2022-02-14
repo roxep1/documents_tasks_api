@@ -11,6 +11,10 @@ import org.koin.ktor.ext.inject
 fun Routing.userRoute() {
     val service: UserService by inject()
 
+    get("users"){
+        call.respond(service.getAllUsers())
+    }
+
     route("user") {
 
         /* Принимает только List<String> в теле запроса и возвращает List<User> */

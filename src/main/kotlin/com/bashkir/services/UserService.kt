@@ -7,7 +7,9 @@ class UserService {
 
     fun getUser(id: String): User.Model = transaction { User[id].toModel() }
 
-    fun getAllUsers(ids: List<String>): List<User.Model?> = ids.map {getUser(it)}
+    fun getAllUsers(ids: List<String>): List<User.Model> = ids.map {getUser(it)}
+
+    fun getAllUsers(): List<User.Model> = User.all().map{ it.toModel() }
 
     fun getTasksToDo(id: String): List<Task.Model> = transaction { User[id].tasksToDo.map { it.task.toModel() } }
 
