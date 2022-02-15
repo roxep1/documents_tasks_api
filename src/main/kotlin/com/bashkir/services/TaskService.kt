@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 class TaskService {
     fun addTask(model: Task.Model) = transaction {
-        Task.new {
+        val task = Task.new {
             title = model.title
             desc = model.desc
             created = LocalDateTime.now()
@@ -17,7 +17,7 @@ class TaskService {
         model.performs.forEach { performer ->
             Perform.new {
                 user = User[performer.user.id]
-                task = Task[performer.taskId]
+                this.task = task
                 status = PerformStatus.Waiting
                 comment = null
                 statusChanged = null

@@ -20,7 +20,7 @@ class DocumentService {
         model.familiarize.forEach {
             Familiarize.new {
                 user = User[it.userId]
-                document = Document[it.documentId]
+                document = doc
                 checked = false
                 created = LocalDateTime.now()
             }
@@ -29,7 +29,7 @@ class DocumentService {
         model.agreement.forEach {
             Agreement.new {
                 user = User[it.userId]
-                document = Document[it.documentId]
+                document = doc
                 deadline = LocalDateTime.parse(it.deadline)
                 status = AgreementStatus.Sent
                 comment = null
