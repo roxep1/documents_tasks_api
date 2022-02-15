@@ -3,6 +3,7 @@ package com.bashkir.routings
 import com.bashkir.extensions.withStringId
 import com.bashkir.services.UserService
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -11,7 +12,7 @@ import org.koin.ktor.ext.inject
 fun Routing.userRoute() {
     val service: UserService by inject()
 
-    get("users"){
+    get("users") {
         call.respond(service.getAllUsers())
     }
 
@@ -26,7 +27,11 @@ fun Routing.userRoute() {
             /* Принимает id пользователя и возвращает пользователя */
             get {
                 withStringId {
-                    call.respond(service.getUser(it))
+                    val user = service.getUser(it)
+                    if (user != null)
+                        call.respond(user)
+                    else
+                        call.respond(HttpStatusCode.NotFound)
                 }
             }
 
