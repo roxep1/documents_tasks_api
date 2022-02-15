@@ -42,8 +42,8 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
         val file = model?.file
         val desc = model?.desc
         val created = model?.created.toString()
-        val familiarize = transaction { model?.familiarize?.map { it.toModel() } }
-        val agreement = transaction { model?.agreement?.map { it.toModel() } }
+        val familiarize = transaction { model?.familiarize?.map { it.toModel() } } ?: listOf()
+        val agreement = transaction { model?.agreement?.map { it.toModel() } } ?: listOf()
     }
 
     fun toModel(): Model = Model(this)

@@ -55,7 +55,7 @@ class Perform(id: EntityID<Int>) : IntEntity(id) {
         val status = model?.status
         val comment = model?.comment
         val statusChanged = model?.statusChanged?.toString()
-        val documents = transaction { model?.documents?.map { it.toModel() } }
+        val documents = transaction { model?.documents?.map { it.toModel() } } ?: listOf()
     }
 
     fun toModel(): Model = Model(this)

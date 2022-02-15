@@ -35,7 +35,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
         val created = model?.created?.toString()
         val deadline = model?.deadline?.toString()
         val author = model?.author?.toModel()
-        val performs = transaction { model?.performs?.map { it.toModel() } }
+        val performs = transaction { model?.performs?.map { it.toModel() } } ?: listOf()
     }
 
     fun toModel(): Model = Model(this)
