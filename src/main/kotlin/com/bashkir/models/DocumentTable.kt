@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object DocumentTable : IntIdTable("documents", "documents_id") {
     val template = reference("template_id", TemplateTable).nullable()
@@ -41,8 +42,8 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
         val file = model?.file
         val desc = model?.desc
         val created = model?.created.toString()
-        val familiarize = model?.familiarize?.map { it.toModel() } ?: listOf()
-        val agreement = model?.agreement?.map { it.toModel()} ?: listOf()
+        val familiarize = transaction { model?.familiarize?.map { it.toModel() } }
+        val agreement = transaction { model?.agreement?.map { it.toModel() } }
     }
 
     fun toModel(): Model = Model(this)

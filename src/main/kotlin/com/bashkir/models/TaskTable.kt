@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object TaskTable : IntIdTable("task") {
     val title = varchar("title", 100)
@@ -24,7 +25,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
     var created by TaskTable.created
     var deadline by TaskTable.deadline
     var author by User referencedOn TaskTable.author
-    val performs by Perform.referrersOn(PerformTable.task)
+    val performs by Perform referrersOn PerformTable.task
 
     @Serializable
     data class Model(@Transient val model: Task? = null) {
@@ -34,7 +35,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
         val created = model?.created?.toString()
         val deadline = model?.deadline?.toString()
         val author = model?.author?.toModel()
-        val performs = model?.performs?.map {it.toModel()}
+        val performs = transaction { model?.performs?.map { it.toModel() } }
     }
 
     fun toModel(): Model = Model(this)
