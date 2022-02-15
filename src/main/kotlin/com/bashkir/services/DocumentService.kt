@@ -10,16 +10,16 @@ class DocumentService {
             model.templateId?.let {
                 template = Template[model.templateId]
             }
-            author = User[model.author.id]
-            title = model.title
-            file = model.file
+            author = User[model.author!!.id!!]
+            title = model.title!!
+            file = model.file!!
             desc = model.desc
             created = LocalDateTime.now()
         }
 
         model.familiarize.forEach {
             Familiarize.new {
-                user = User[it.userId]
+                user = User[it.userId!!]
                 document = doc
                 checked = false
                 created = LocalDateTime.now()
@@ -28,7 +28,7 @@ class DocumentService {
 
         model.agreement.forEach {
             Agreement.new {
-                user = User[it.userId]
+                user = User[it.userId!!]
                 document = doc
                 deadline = LocalDateTime.parse(it.deadline)
                 status = AgreementStatus.Sent

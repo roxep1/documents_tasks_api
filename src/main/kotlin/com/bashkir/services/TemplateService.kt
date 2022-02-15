@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class TemplateService {
     fun addTemplate(model: Template.Model) = transaction {
         Template.new(model.name) {
-            file = model.file
+            file = model.file!!
         }
     }
 
@@ -19,6 +19,6 @@ class TemplateService {
     }
 
     fun updateTemplate(model: Template.Model) = transaction {
-        Template[model.name].file = model.file
+        Template[model.name!!].file = model.file!!
     }
 }
