@@ -8,9 +8,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserService {
 
-    fun getUser(id: String): User.Model = transaction { User[id].toModel() }
+    fun getUser(id: String): User.Model? = transaction { User.findById(id)?.toModel() }
 
-    fun getAllUsers(ids: List<String>): List<User.Model> = ids.map { getUser(it) }
+    fun getAllUsers(ids: List<String>): List<User.Model> = ids.map { getUser(it)!! }
 
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
