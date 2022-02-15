@@ -28,13 +28,13 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
 
     @Serializable
     data class Model(@Transient val model: Task? = null) {
-        val id = model!!.id.value
-        val title = model!!.title
-        val desc = model!!.desc
-        val created = model!!.created.toString()
-        val deadline = model!!.deadline.toString()
-        val author = model!!.author.toModel()
-        val performs = model!!.performs.map {it.toModel()}
+        val id = model?.id?.value
+        val title = model?.title
+        val desc = model?.desc
+        val created = model?.created?.toString()
+        val deadline = model?.deadline?.toString()
+        val author = model?.author?.toModel()
+        val performs = model?.performs?.map {it.toModel()}
     }
 
     fun toModel(): Model = Model(this)

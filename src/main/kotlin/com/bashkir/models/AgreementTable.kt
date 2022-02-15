@@ -10,6 +10,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ColumnSet
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
+import java.time.LocalDateTime
 
 object AgreementTable : IntIdTable("agreement") {
 
@@ -52,14 +53,14 @@ class Agreement(id: EntityID<Int>) : IntEntity(id) {
 
     @Serializable
     data class Model(@Transient val model: Agreement? = null) {
-        val id = model!!.id.value
-        val userId = model!!.user.id.value
-        val documentId = model!!.document.id.value
-        val deadline = model!!.deadline.toString()
-        val status = model!!.status
-        val comment = model!!.comment
-        val created = model!!.created.toString()
-        val statusChanged = model!!.statusChanged?.toString()
+        val id = model?.id?.value
+        val userId = model?.user?.id?.value
+        val documentId = model?.document?.id?.value
+        val deadline = model?.deadline?.toString()
+        val status = model?.status
+        val comment = model?.comment
+        val created = model?.created?.toString()
+        val statusChanged = model?.statusChanged?.toString()
     }
 
     fun toModel(): Model = Model(this)

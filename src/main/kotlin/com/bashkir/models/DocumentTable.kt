@@ -34,15 +34,15 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
 
     @Serializable
     data class Model(@Transient val model: Document? = null) {
-        val id = model!!.id.value
-        val templateId = model!!.template?.id?.value
-        val author = model!!.author.toModel()
-        val title = model!!.title
-        val file = model!!.file
-        val desc = model!!.desc
-        val created = model!!.created.toString()
-        val familiarize = model!!.familiarize.map { it.toModel() }
-        val agreement = model!!.agreement.map { it.toModel()}
+        val id = model?.id?.value ?: -1
+        val templateId = model?.template?.id?.value
+        val author = model?.author?.toModel()
+        val title = model?.title
+        val file = model?.file
+        val desc = model?.desc
+        val created = model?.created.toString()
+        val familiarize = model?.familiarize?.map { it.toModel() } ?: listOf()
+        val agreement = model?.agreement?.map { it.toModel()} ?: listOf()
     }
 
     fun toModel(): Model = Model(this)

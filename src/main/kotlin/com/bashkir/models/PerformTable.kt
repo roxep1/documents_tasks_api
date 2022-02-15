@@ -48,13 +48,13 @@ class Perform(id: EntityID<Int>) : IntEntity(id) {
 
     @Serializable
     data class Model(@Transient val model: Perform? = null) {
-        val id = model!!.id.value
-        val user = model!!.user.toModel()
-        val taskId = model!!.task.id.value
-        val status = model!!.status
-        val comment = model!!.comment
-        val statusChanged = model!!.statusChanged?.toString()
-        val documents = model!!.documents.map { it.toModel()}
+        val id = model?.id?.value
+        val user = model?.user?.toModel()
+        val taskId = model?.task?.id?.value
+        val status = model?.status
+        val comment = model?.comment
+        val statusChanged = model?.statusChanged?.toString()
+        val documents = model?.documents?.map { it.toModel()}
     }
 
     fun toModel(): Model = Model(this)

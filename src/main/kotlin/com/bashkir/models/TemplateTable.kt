@@ -18,8 +18,8 @@ class Template(id: EntityID<String>): Entity<String>(id){
 
     @Serializable
     data class Model(@Transient val model: Template? = null){
-        val name = model!!.id.value
-        val file = model!!.file
+        val name = model?.id?.value
+        val file = model?.file
     }
 
     fun toModel(): Model = Model(this)

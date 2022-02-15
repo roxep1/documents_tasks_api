@@ -14,7 +14,7 @@ class Role(id: EntityID<String>) : Entity<String>(id) {
 
     @Serializable
     data class Model(@Transient val model: Role? = null) {
-        val name = model!!.id.value
+        val name = model?.id?.value
     }
 
     fun toModel(): Model = Model(this)
