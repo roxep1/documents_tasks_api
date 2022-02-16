@@ -37,13 +37,13 @@ fun Routing.userRoute() {
 
             get("familiarizes") {
                 withStringId {
-                    service.getFamiliarizes(it)
+                    call.respond(service.getFamiliarizes(it))
                 }
             }
 
             get("agreements") {
                 withStringId {
-                    service.getAgreements(it)
+                    call.respond(service.getAgreements(it))
                 }
             }
 
