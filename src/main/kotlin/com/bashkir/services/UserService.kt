@@ -14,12 +14,12 @@ class UserService {
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
     fun getTasksToDo(id: String): List<Task.Model> = transaction {
-        User[id].load(User::tasksToDo).tasksToDo.with(Task::performs, Perform::documents).map { it.task.toModel() }
+        User[id].tasksToDo.with(Perform::task).map { it.task }.with(Task::performs).map{ it.toModel()}
     }
 
     fun getGivenTasks(id: String): List<Task.Model> =
         transaction {
-            User[id].load(User::givenTasks).givenTasks.with(Task::performs, Perform::documents).map { it.toModel() }
+            User[id].givenTasks.with(Task::performs, Perform::documents).map { it.toModel() }
         }
 
     fun getAllUserTasks(id: String): List<Task.Model> = getTasksToDo(id).plus(getGivenTasks(id))
