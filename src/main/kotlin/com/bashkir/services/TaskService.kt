@@ -14,7 +14,7 @@ class TaskService {
             author = User[model.author!!.id!!]
         }
 
-        model.performs?.forEach { performer ->
+        model.performs.forEach { performer ->
             Perform.new {
                 user = User[performer.user!!.id!!]
                 this.task = task

@@ -10,7 +10,6 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ColumnSet
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
-import org.jetbrains.exposed.sql.transactions.transaction
 
 object PerformTable : IntIdTable("performer") {
     val user = reference("user", UserTable)
@@ -55,7 +54,7 @@ class Perform(id: EntityID<Int>) : IntEntity(id) {
         val status = model?.status
         val comment = model?.comment
         val statusChanged = model?.statusChanged?.toString()
-        val documents = transaction { model?.documents?.map { it.toModel() } } ?: listOf()
+        val documents = model?.documents?.map { it.toModel() } ?: listOf()
     }
 
     fun toModel(): Model = Model(this)

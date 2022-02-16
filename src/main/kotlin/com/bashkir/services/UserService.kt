@@ -1,9 +1,8 @@
 package com.bashkir.services
 
-import com.bashkir.models.Agreement
-import com.bashkir.models.Familiarize
-import com.bashkir.models.Task
-import com.bashkir.models.User
+import com.bashkir.models.*
+import org.jetbrains.exposed.dao.load
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserService {
@@ -14,10 +13,14 @@ class UserService {
 
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
-    fun getTasksToDo(id: String): List<Task.Model> = transaction { User[id].tasksToDo.map { it.task.toModel() } }
+    fun getTasksToDo(id: String): List<Task.Model> = transaction {
+        User[id].load(User::tasksToDo).tasksToDo.with(Task::performs, Perform::documents).map { it.task.toModel() }
+    }
 
     fun getGivenTasks(id: String): List<Task.Model> =
-        transaction { User[id].givenTasks.map { it.toModel() } }
+        transaction {
+            User[id].load(User::givenTasks).givenTasks.with(Task::performs, Perform::documents).map { it.toModel() }
+        }
 
     fun getAllUserTasks(id: String): List<Task.Model> = getTasksToDo(id).plus(getGivenTasks(id))
 
