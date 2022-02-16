@@ -14,8 +14,8 @@ class UserService {
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
     fun getTasksToDo(id: String): List<Task.Model> = transaction {
-        User[id].tasksToDo.with(Perform::task).map { it.task }.with(Task::performs).map{ it.toModel()}
-    }
+        User[id].tasksToDo
+    }.run { transaction{ map { it.task.toModel() }}}
 
     fun getGivenTasks(id: String): List<Task.Model> =
         transaction {
