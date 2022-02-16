@@ -1,9 +1,6 @@
 package com.bashkir.services
 
-import com.bashkir.models.Agreement
-import com.bashkir.models.Familiarize
-import com.bashkir.models.Task
-import com.bashkir.models.User
+import com.bashkir.models.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserService {
@@ -14,9 +11,8 @@ class UserService {
 
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
-    fun getTasksToDo(id: String): List<*> = transaction {
-        val user = User[id]
-        user.tasksToDo.toList().plus(user.agreements).plus(user.familiarizes)
+    fun getTasksToDo(id: String): List<Perform.Model> = transaction {
+        Perform.find { UserTable.id eq id }.map { it.toModel() }
     }
 
     fun getGivenTasks(id: String): List<Task.Model> =
