@@ -1,6 +1,8 @@
 package com.bashkir.services
 
 import com.bashkir.models.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserService {
@@ -11,8 +13,10 @@ class UserService {
 
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
-    fun getTasksToDo(id: String): List<Perform.Model> = transaction {
-        Perform.find { PerformTable.user eq id }.map { it.toModel() }
+    fun getTasksToDo(id: String) = transaction {
+        PerformTable.select { PerformTable.user eq id }.forEach {
+            println(it[PerformTable.user])
+        }
     }
 
     fun getGivenTasks(id: String): List<Task.Model> =

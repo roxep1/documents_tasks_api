@@ -59,7 +59,8 @@ fun Routing.userRoute() {
                 /* Возвращает задания, которые должен выполнить данный пользователь */
                 get("todo") {
                     withStringId {
-                        call.respond(service.getTasksToDo(it))
+                        service.getTasksToDo(it)
+                        call.respond(HttpStatusCode.OK)
                     }
                 }
 
