@@ -12,7 +12,7 @@ class UserService {
     fun getAllUsers(): List<User.Model> = transaction { User.all().map { it.toModel() } }
 
     fun getTasksToDo(id: String): List<Perform.Model> = transaction {
-        Perform.find { UserTable.id eq id }.map { it.toModel() }
+        Perform.find { PerformTable.user eq id }.map { it.toModel() }
     }
 
     fun getGivenTasks(id: String): List<Task.Model> =
