@@ -6,7 +6,6 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.ColumnSet
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
 
@@ -20,7 +19,7 @@ object FamiliarizeTable : IntIdTable("familiarize") {
 
 class Familiarize(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Familiarize>(FamiliarizeTable) {
-        override val dependsOnTables: ColumnSet = UserTable.innerJoin(FamiliarizeTable).innerJoin(DocumentTable)
+
         override fun createInstance(entityId: EntityID<Int>, row: ResultRow?): Familiarize {
 
             row?.getOrNull(UserTable.id)?.let {

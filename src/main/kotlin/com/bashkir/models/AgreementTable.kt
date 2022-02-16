@@ -7,10 +7,8 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.ColumnSet
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
-import java.time.LocalDateTime
 
 object AgreementTable : IntIdTable("agreement") {
 
@@ -29,7 +27,7 @@ object AgreementTable : IntIdTable("agreement") {
 
 class Agreement(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Agreement>(AgreementTable) {
-        override val dependsOnTables: ColumnSet = UserTable.innerJoin(AgreementTable).innerJoin(DocumentTable)
+
         override fun createInstance(entityId: EntityID<Int>, row: ResultRow?): Agreement {
 
             row?.getOrNull(UserTable.id)?.let {
