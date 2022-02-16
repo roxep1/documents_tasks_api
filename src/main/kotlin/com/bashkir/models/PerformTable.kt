@@ -25,7 +25,6 @@ object PerformTable : IntIdTable("performer") {
 
 class Perform(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Perform>(PerformTable) {
-        override val dependsOnTables: ColumnSet = PerformTable.innerJoin(UserTable).innerJoin(TaskTable).innerJoin(DocumentTable)
 
         override fun createInstance(entityId: EntityID<Int>, row: ResultRow?): Perform {
 
