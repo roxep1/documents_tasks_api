@@ -22,6 +22,11 @@ fun Routing.taskRoute(){
             call.respond(HttpStatusCode.OK)
         }
 
+        put("status"){
+            service.inProgressAllPerforms(call.receive())
+            call.respond(HttpStatusCode.OK)
+        }
+
         route("{id}"){
 
             put("comment"){

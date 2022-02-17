@@ -1,6 +1,9 @@
 package com.bashkir.services
 
-import com.bashkir.models.*
+import com.bashkir.models.Perform
+import com.bashkir.models.PerformStatus
+import com.bashkir.models.Task
+import com.bashkir.models.User
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
@@ -30,9 +33,11 @@ class TaskService {
     }
 
     fun changePerformStatus(performId: Int, status: PerformStatus) = transaction {
-        Perform[performId].run{
+        Perform[performId].run {
             this.status = status
             statusChanged = LocalDateTime.now()
         }
     }
+
+    fun inProgressAllPerforms(ids: List<Int>) = ids.forEach { changePerformStatus(it, PerformStatus.InProgress) }
 }
