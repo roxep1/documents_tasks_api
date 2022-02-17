@@ -12,7 +12,7 @@ object DocumentTable : IntIdTable("documents", "documents_id") {
     val template = reference("template_id", TemplateTable).nullable()
     val author = reference("author", UserTable)
     val title = varchar("title", 200)
-    val file = text("file")
+    val file = binary("file")
     val desc = varchar("description", 300).nullable()
     val created = datetime("created")
     val perform = reference("perform_id", PerformTable).nullable()

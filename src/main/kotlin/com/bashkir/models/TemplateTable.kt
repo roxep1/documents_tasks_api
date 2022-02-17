@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.id.EntityID
 
 object TemplateTable : StringIdTable("template", "name", 50) {
-    val file = text("file")
+    val file = binary("file")
 }
 
 class Template(id: EntityID<String>): Entity<String>(id){
