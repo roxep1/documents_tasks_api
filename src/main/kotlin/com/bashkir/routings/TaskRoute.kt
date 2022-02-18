@@ -9,36 +9,43 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
-fun Routing.taskRoute(){
+fun Routing.taskRoute() {
     val service: TaskService by inject()
 
-    route("task"){
+    route("task") {
 
         /* created не нужен.
         * в перформерах:
         * status, comment, statusChanged и documents не нужны */
-        post{
+        post {
             service.addTask(call.receive())
             call.respond(HttpStatusCode.OK)
         }
 
-        put("status"){
+        put("status") {
             service.inProgressAllPerforms(call.receive())
             call.respond(HttpStatusCode.OK)
         }
 
-        route("{id}"){
+        route("{id}") {
 
-            put("comment"){
+            put("comment") {
                 withId {
                     service.addCommentToPerform(it, call.receive())
                     call.respond(HttpStatusCode.OK)
                 }
             }
 
-            put("status"){
-                withId{
+            put("status") {
+                withId {
                     service.changePerformStatus(it, call.receive())
+                    call.respond(HttpStatusCode.OK)
+                }
+            }
+
+            delete {
+                withId {
+                    service.deleteTask(it)
                     call.respond(HttpStatusCode.OK)
                 }
             }
