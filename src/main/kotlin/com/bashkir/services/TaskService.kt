@@ -41,5 +41,10 @@ class TaskService {
 
     fun inProgressAllPerforms(ids: List<Int>) = ids.forEach { changePerformStatus(it, PerformStatus.InProgress) }
 
-    fun deleteTask(id: Int) = transaction { Task[id].delete() }
+    fun deleteTask(id: Int) = transaction {
+        Task[id].run{
+            performs.forEach { it.delete() }
+            delete()
+        }
+    }
 }
