@@ -1,6 +1,7 @@
 package com.bashkir.routings
 
 import com.bashkir.extensions.withId
+import com.bashkir.models.Task
 import com.bashkir.services.TaskService
 import io.ktor.application.*
 import io.ktor.http.*
@@ -18,8 +19,13 @@ fun Routing.taskRoute() {
         * в перформерах:
         * status, comment, statusChanged и documents не нужны */
         post {
-            service.addTask(call.receive())
-            call.respond(HttpStatusCode.OK)
+            val task: Task.Model = call.receive()
+            if (task.performs.isEmpty())
+                call.respond(HttpStatusCode.BadRequest)
+            else{
+                service.addTask(task)
+                call.respond(HttpStatusCode.OK)
+            }
         }
 
         put("status") {
