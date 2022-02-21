@@ -33,7 +33,10 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
     val agreement by Agreement referrersOn AgreementTable.document
 
     @Serializable
-    data class Model(@Transient val model: Document? = null) {
+    data class Model(
+        @Transient val model: Document? = null,
+        @Transient val withFamiliarizesAndAgreements: Boolean = true
+    ) {
         val id = model?.id?.value ?: -1
         val templateId = model?.template?.id?.value
         val author = model?.author?.toModel()
@@ -41,9 +44,11 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
         val file = model?.file
         val desc = model?.desc
         val created = model?.created.toString()
-        val familiarize = model?.familiarize?.map { it.toModel() } ?: listOf()
-        val agreement = model?.agreement?.map { it.toModel() } ?: listOf()
+        val familiarize =
+            if (withFamiliarizesAndAgreements) model?.familiarize?.map { it.toModel() } ?: listOf() else listOf()
+        val agreement =
+            if (withFamiliarizesAndAgreements) model?.agreement?.map { it.toModel() } ?: listOf() else listOf()
     }
 
-    fun toModel(): Model = Model(this)
+    fun toModel(withFamiliarizesAndAgreements: Boolean = true): Model = Model(this, withFamiliarizesAndAgreements)
 }

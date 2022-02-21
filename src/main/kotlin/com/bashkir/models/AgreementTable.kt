@@ -53,7 +53,7 @@ class Agreement(id: EntityID<Int>) : IntEntity(id) {
     data class Model(@Transient val model: Agreement? = null) {
         val id = model?.id?.value
         val userId = model?.user?.id?.value
-        val documentId = model?.document?.id?.value
+        val document = model?.document?.toModel(false)
         val deadline = model?.deadline?.toString()
         val status = model?.status
         val comment = model?.comment
