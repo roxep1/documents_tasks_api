@@ -18,27 +18,16 @@ class DocumentService {
         }
 
         model.familiarize.forEach {
-            Familiarize.new {
-                user = User[it.userId!!]
-                document = doc
-                checked = false
-                created = LocalDateTime.now()
-            }
+            newFamiliarizeFromModel(it, doc)
         }
 
         model.agreement.forEach {
-            Agreement.new {
-                user = User[it.userId!!]
-                document = doc
-                deadline = LocalDateTime.parse(it.deadline)
-                status = AgreementStatus.Sent
-                comment = null
-                created = LocalDateTime.now()
-                statusChanged = null
-            }
+            newAgreementFromModel(it, doc)
         }
         doc
     }
+
+
     fun getAllDocuments(): List<Document.Model> = transaction { Document.all().map { it.toModel() } }
 
     fun getDocument(id: Int): Document.Model = transaction { Document[id].toModel() }
@@ -69,4 +58,54 @@ class DocumentService {
         addDocument(document).perform = Perform[performId]
     }
 
+    fun updateDocument(model: Document.Model) = transaction {
+        Document[model.id].run {
+            model.templateId?.let {
+                template = Template[model.templateId]
+            }
+            title = model.title!!
+            file = model.file!!
+            desc = model.desc
+
+            familiarize.map { it.user.id.value }.let{ids ->
+                model.familiarize.forEach {
+                    if (!ids.contains(it.userId))
+                        newFamiliarizeFromModel(it, this)
+                }
+            }
+            agreement.map { it.user.id.value }.let{ids ->
+                model.agreement.forEach {
+                    if(!ids.contains(it.userId))
+                        newAgreementFromModel(it, this)
+                }
+            }
+            familiarize.forEach {
+                it.checked = false
+            }
+            agreement.forEach {
+                it.status = AgreementStatus.Sent
+            }
+        }
+    }
+
+    private fun newFamiliarizeFromModel(model: Familiarize.Model, doc: Document) = transaction {
+        Familiarize.new {
+            user = User[model.userId!!]
+            document = doc
+            checked = false
+            created = LocalDateTime.now()
+        }
+    }
+
+    private fun newAgreementFromModel(model: Agreement.Model, doc: Document) = transaction{
+        Agreement.new {
+            user = User[model.userId!!]
+            document = doc
+            deadline = LocalDateTime.parse(model.deadline)
+            status = AgreementStatus.Sent
+            comment = null
+            created = LocalDateTime.now()
+            statusChanged = null
+        }
+    }
 }

@@ -32,6 +32,11 @@ fun Routing.documentRoute() {
             call.respond(service.getAllDocuments(call.receive()))
         }
 
+        put{
+            service.updateDocument(call.receive())
+            call.respond(HttpStatusCode.OK)
+        }
+
         get("{id}") {
             withId {
                 call.respond(service.getDocument(it))
