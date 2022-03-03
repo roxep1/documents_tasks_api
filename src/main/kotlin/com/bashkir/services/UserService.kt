@@ -1,9 +1,6 @@
 package com.bashkir.services
 
-import com.bashkir.models.Agreement
-import com.bashkir.models.Familiarize
-import com.bashkir.models.Task
-import com.bashkir.models.User
+import com.bashkir.models.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserService {
@@ -31,4 +28,6 @@ class UserService {
 
     fun getAgreements(id: String): List<Agreement.Model> =
         transaction { User[id].agreements.map { it.toModel() } }
+
+    fun setRole(id: String, role: Role.Model) = transaction { User[id].role = Role[role.name!!] }
 }

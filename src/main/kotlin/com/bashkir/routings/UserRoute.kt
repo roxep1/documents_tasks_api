@@ -24,6 +24,13 @@ fun Routing.userRoute() {
         }
 
         route("{id}") {
+            put {
+                withStringId {
+                    service.setRole(it, call.receive())
+                    call.respond(HttpStatusCode.OK)
+                }
+            }
+
             /* Принимает id пользователя и возвращает пользователя */
             get {
                 withStringId {
