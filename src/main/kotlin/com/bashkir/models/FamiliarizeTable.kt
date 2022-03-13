@@ -43,7 +43,7 @@ class Familiarize(id: EntityID<Int>) : IntEntity(id) {
     @Serializable
     data class Model(@Transient val model: Familiarize? = null) {
         val id = model?.id?.value
-        val userId = model?.user?.id?.value
+        val user = model?.user?.toModel()
         val document = model?.document?.toModel(false)
         val familiarized = model?.checked
         val created = model?.created.toString()

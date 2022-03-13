@@ -52,7 +52,7 @@ class Agreement(id: EntityID<Int>) : IntEntity(id) {
     @Serializable
     data class Model(@Transient val model: Agreement? = null) {
         val id = model?.id?.value
-        val userId = model?.user?.id?.value
+        val user = model?.user?.toModel()
         val document = model?.document?.toModel(false)
         val deadline = model?.deadline?.toString()
         val status = model?.status

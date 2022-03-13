@@ -69,13 +69,13 @@ class DocumentService {
 
             familiarize.map { it.user.id.value }.let{ids ->
                 model.familiarize.forEach {
-                    if (!ids.contains(it.userId))
+                    if (!ids.contains(it.user!!.id!!))
                         newFamiliarizeFromModel(it, this)
                 }
             }
             agreement.map { it.user.id.value }.let{ids ->
                 model.agreement.forEach {
-                    if(!ids.contains(it.userId))
+                    if(!ids.contains(it.user!!.id!!))
                         newAgreementFromModel(it, this)
                 }
             }
@@ -90,7 +90,7 @@ class DocumentService {
 
     private fun newFamiliarizeFromModel(model: Familiarize.Model, doc: Document) = transaction {
         Familiarize.new {
-            user = User[model.userId!!]
+            user = User[model.user!!.id!!]
             document = doc
             checked = false
             created = LocalDateTime.now()
@@ -99,7 +99,7 @@ class DocumentService {
 
     private fun newAgreementFromModel(model: Agreement.Model, doc: Document) = transaction{
         Agreement.new {
-            user = User[model.userId!!]
+            user = User[model.user!!.id!!]
             document = doc
             deadline = LocalDateTime.parse(model.deadline)
             status = AgreementStatus.Sent
