@@ -54,6 +54,12 @@ fun Routing.userRoute() {
                 }
             }
 
+            get("documents"){
+                withStringId{
+                    call.respond(service.getCreatedDocuments(it))
+                }
+            }
+
             route("tasks") {
                 /* Возвращает все задания связанные с пользователем.
                 И где пользователь автор, и где он исполнитель */

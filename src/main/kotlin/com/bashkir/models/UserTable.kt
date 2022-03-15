@@ -7,7 +7,7 @@ import kotlinx.serialization.Transient
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.id.EntityID
 
-object UserTable: StringIdTable("user", "user_id", 30) {
+object UserTable : StringIdTable("user", "user_id", 30) {
     val email = varchar("email", 100)
     val firstName = varchar("first_name", 100)
     val secondName = varchar("second_name", 100)
@@ -23,6 +23,7 @@ class User(id: EntityID<String>) : Entity<String>(id) {
     var middleName by UserTable.middleName
     var email by UserTable.email
     var role by Role optionalReferencedOn UserTable.role
+    val createdDocuments by Document referrersOn DocumentTable.author
     val familiarizes by Familiarize referrersOn FamiliarizeTable.user
     val agreements by Agreement referrersOn AgreementTable.user
     val tasksToDo by Perform referrersOn PerformTable.user

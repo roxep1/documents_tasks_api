@@ -29,5 +29,8 @@ class UserService {
     fun getAgreements(id: String): List<Agreement.Model> =
         transaction { User[id].agreements.map { it.toModel() } }
 
+    fun getCreatedDocuments(id: String): List<Document.Model> =
+        transaction { User[id].createdDocuments.map { it.toModel() } }
+
     fun setRole(id: String, role: Role.Model) = transaction { User[id].role = Role[role.name!!] }
 }
