@@ -12,12 +12,11 @@ import org.koin.logger.slf4jLogger
 import java.sql.Connection
 import java.sql.DriverManager
 
-fun Application.configureKoin() {
+fun Application.configureKoin() =
     install(Koin) {
         slf4jLogger(level = Level.ERROR)
         modules(serviceModule)
     }
-}
 
 fun connectDatabase(user: String, password: String) {
     Database.connect(
@@ -34,10 +33,8 @@ private fun getConnection(): Connection {
     return DriverManager.getConnection(dbUrl)
 }
 
-
-
-fun createTables(enums: Boolean = false) = transaction {
-    if(enums){
+fun createTables(firstDeploy: Boolean = false) = transaction {
+    if(firstDeploy){
         exec("CREATE TYPE AgreementStatus AS ENUM ('Sent', 'Agreed', 'Declined');")
         exec("CREATE TYPE PerformStatus AS ENUM ('Waiting', 'InProgress', 'Completed');")
     }
@@ -52,4 +49,19 @@ fun createTables(enums: Boolean = false) = transaction {
         TemplateTable,
         UserTable
     )
+}
+
+fun deleteTables() = transaction {
+    SchemaUtils.drop(
+        AgreementTable,
+        DocumentTable,
+        FamiliarizeTable,
+        PerformTable,
+        RoleTable,
+        TaskTable,
+        TemplateTable,
+        UserTable
+    )
+    exec("DROP TYPE IF EXISTS AgreementStatus CASCADE")
+    exec("DROP TYPE IF EXISTS PerformStatus CASCADE")
 }

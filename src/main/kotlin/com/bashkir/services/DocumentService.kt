@@ -67,15 +67,15 @@ class DocumentService {
             file = model.file!!
             desc = model.desc
 
-            familiarize.map { it.user.id.value }.let{ids ->
+            familiarize.map { it.user.id.value }.let { ids ->
                 model.familiarize.forEach {
                     if (!ids.contains(it.user!!.id!!))
                         newFamiliarizeFromModel(it, this)
                 }
             }
-            agreement.map { it.user.id.value }.let{ids ->
+            agreement.map { it.user.id.value }.let { ids ->
                 model.agreement.forEach {
-                    if(!ids.contains(it.user!!.id!!))
+                    if (!ids.contains(it.user!!.id!!))
                         newAgreementFromModel(it, this)
                 }
             }
@@ -97,7 +97,7 @@ class DocumentService {
         }
     }
 
-    private fun newAgreementFromModel(model: Agreement.Model, doc: Document) = transaction{
+    private fun newAgreementFromModel(model: Agreement.Model, doc: Document) = transaction {
         Agreement.new {
             user = User[model.user!!.id!!]
             document = doc

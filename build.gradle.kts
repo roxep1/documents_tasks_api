@@ -7,18 +7,34 @@ val koinVersion: String by project
 plugins {
     application
     kotlin("jvm") version "1.6.10"
-                id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
-}
-
-group = "com.bashkir"
-version = "0.0.1"
-application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
     mavenCentral()
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
+}
+
+group = "com.bashkir"
+version = "0.0.1"
+
+application {
+    mainClass.set("io.ktor.server.netty.EngineMain")
+}
+
+tasks{
+    shadowJar {
+        manifest {
+            attributes(Pair("Main-Class", "com.bashkir.ApplicationKt"))
+        }
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -40,7 +56,7 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
     //Connect to postgreSQL
-    implementation("org.postgresql:postgresql:42.2.24.jre7")
+    implementation("org.postgresql:postgresql:42.2.25.jre7")
 }
 
 tasks.create("stage") {
