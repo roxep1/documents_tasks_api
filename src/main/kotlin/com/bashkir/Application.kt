@@ -14,8 +14,8 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused")
 fun Application.module() {
-    connectDatabase("postgres", "PPJbe26P3G7d")
-    createTables(true)
+    connectDatabase()
+    createTables()
     configureRouting()
     configureSerialization()
     configureKoin()
