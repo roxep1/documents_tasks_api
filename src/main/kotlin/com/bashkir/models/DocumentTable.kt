@@ -32,7 +32,7 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
     var perform by Perform optionalReferencedOn DocumentTable.perform
     val familiarize by Familiarize referrersOn FamiliarizeTable.document
     val agreement by Agreement referrersOn AgreementTable.document
-    val ext by DocumentTable.ext
+    var ext by DocumentTable.ext
 
     @Serializable
     data class Model(

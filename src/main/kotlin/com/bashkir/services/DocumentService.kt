@@ -15,6 +15,7 @@ class DocumentService {
             file = model.file!!
             desc = model.desc
             created = LocalDateTime.now()
+            ext = model.extension!!
         }
 
         model.familiarize.forEach {
@@ -66,6 +67,7 @@ class DocumentService {
             title = model.title!!
             file = model.file!!
             desc = model.desc
+            ext = model.extension!!
 
             familiarize.map { it.user.id.value }.let { ids ->
                 model.familiarize.forEach {
