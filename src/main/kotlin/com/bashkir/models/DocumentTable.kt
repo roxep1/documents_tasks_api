@@ -16,6 +16,7 @@ object DocumentTable : IntIdTable("documents", "documents_id") {
     val desc = varchar("description", 300).nullable()
     val created = datetime("created")
     val perform = reference("perform_id", PerformTable).nullable()
+    val ext = varchar("extension", 6)
 }
 
 
@@ -31,6 +32,7 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
     var perform by Perform optionalReferencedOn DocumentTable.perform
     val familiarize by Familiarize referrersOn FamiliarizeTable.document
     val agreement by Agreement referrersOn AgreementTable.document
+    val ext by DocumentTable.ext
 
     @Serializable
     data class Model(
@@ -44,6 +46,7 @@ class Document(id: EntityID<Int>) : IntEntity(id) {
         val file = model?.file
         val desc = model?.desc
         val created = model?.created.toString()
+        val extension = model?.ext
         val familiarize =
             if (withFamiliarizesAndAgreements) model?.familiarize?.map { it.toModel() } ?: listOf() else listOf()
         val agreement =

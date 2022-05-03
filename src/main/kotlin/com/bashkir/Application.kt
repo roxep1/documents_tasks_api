@@ -3,20 +3,26 @@ package com.bashkir
 import com.bashkir.extensions.configureKoin
 import com.bashkir.extensions.connectDatabase
 import com.bashkir.extensions.createTables
-import com.bashkir.extensions.deleteTables
+import com.bashkir.extensions.scheduleUpdateUsers
 import com.bashkir.plugins.configureRouting
 import com.bashkir.plugins.configureSerialization
 import io.ktor.application.*
+import kotlinx.coroutines.launch
 
 
 fun main(args: Array<String>): Unit =
-    io.ktor.server.netty.EngineMain.main(args)
+    io.ktor.server.tomcat.EngineMain.main(args)
+
 
 @Suppress("unused")
 fun Application.module() {
-    connectDatabase()
+    connectDatabase(user = "task123", password = "b1rt4-3", database = "task123")
     createTables()
     configureRouting()
     configureSerialization()
     configureKoin()
+
+    launch{
+        scheduleUpdateUsers()
+    }
 }

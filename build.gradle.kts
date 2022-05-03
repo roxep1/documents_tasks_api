@@ -8,7 +8,15 @@ plugins {
     application
     kotlin("jvm") version "1.6.10"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.gretty") version "3.0.6"
+    id("war")
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+}
+
+gretty {
+    servletContainer = "tomcat9"
+    contextPath = "/"
+    logbackConfigFile = "src/main/resources/logback.xml"
 }
 
 repositories {
@@ -20,7 +28,13 @@ group = "com.bashkir"
 version = "0.0.1"
 
 application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+    mainClass.set("com.bashkir.ApplicationKt")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 tasks{
@@ -31,16 +45,11 @@ tasks{
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-serialization:$ktor_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-tomcat:$ktor_version")
+    implementation("io.ktor:ktor-server-servlet:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
@@ -56,9 +65,29 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
     //Connect to postgreSQL
-    implementation("org.postgresql:postgresql:42.2.25.jre7")
+    implementation("org.postgresql:postgresql:42.3.4")
+
+    //Retrofit
+    testImplementation("org.json:json:20220320")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Google oauth
+    implementation("com.google.api-client:google-api-client:1.34.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.6.0")
+    implementation("com.google.oauth-client:google-oauth-client:1.33.3")
+
+    //Ktor auth
+    implementation("io.ktor:ktor-auth:$ktor_version")
+    implementation("io.ktor:ktor-auth-jwt:$ktor_version")
+
+    //Ktor tests
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
 }
 
-tasks.create("stage") {
-    dependsOn("installDist")
+afterEvaluate {
+    tasks.getByName("run") {
+        dependsOn("appRun")
+    }
 }

@@ -1,6 +1,6 @@
 package com.bashkir.models
 
-import com.bashkir.extensions.PGEnum
+import com.bashkir.PGEnum
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.jetbrains.exposed.dao.IntEntity

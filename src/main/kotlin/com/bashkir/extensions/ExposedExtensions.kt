@@ -1,4 +1,4 @@
-package com.bashkir.extensions
+package com.bashkir
 
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass

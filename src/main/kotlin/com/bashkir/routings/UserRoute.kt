@@ -56,7 +56,7 @@ fun Routing.userRoute() {
 
             get("documents"){
                 withStringId{
-                    call.respond(service.getCreatedDocuments(it))
+                    call.respond(service.getAllMyDocuments(it))
                 }
             }
 

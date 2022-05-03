@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="documents_tasks_api">
+    <output-path>$PROJECT_DIR$/out/artifacts/documents_tasks_api</output-path>
+    <root id="archive" name="documents_tasks_api.war">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="documents_tasks_api.main" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
