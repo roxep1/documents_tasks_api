@@ -9,7 +9,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
-fun Routing.documentRoute() {
+fun Route.documentRoute() {
     val service: DocumentService by inject()
 
     get("documents"){
@@ -81,7 +81,5 @@ fun Routing.documentRoute() {
                 call.respond(HttpStatusCode.OK)
             }
         }
-
     }
-
 }

@@ -9,7 +9,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
-fun Routing.templateRoute(){
+fun Route.templateRoute(){
     val service: TemplateService by inject()
 
     route("template") {

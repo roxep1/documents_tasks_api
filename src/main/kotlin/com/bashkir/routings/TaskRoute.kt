@@ -10,7 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
-fun Routing.taskRoute() {
+fun Route.taskRoute() {
     val service: TaskService by inject()
 
     route("task") {

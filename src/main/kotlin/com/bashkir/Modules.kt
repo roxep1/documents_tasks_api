@@ -11,6 +11,9 @@ import com.bashkir.services.TaskService
 import com.bashkir.services.TemplateService
 import com.bashkir.services.UserService
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
 import io.ktor.application.*
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -21,7 +24,7 @@ import java.io.FileInputStream
 import java.security.interfaces.RSAPrivateKey
 import java.util.*
 
-private val serviceModule = module{
+private val serviceModule = module {
     single { UserService() }
     single { TaskService() }
     single { DocumentService() }
@@ -49,9 +52,11 @@ private val serviceAccountModule = module {
             .withAudience("https://oauth2.googleapis.com/token")
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .withIssuedAt(Date(System.currentTimeMillis()))
-            .withSubject(env.config.property(
-                "ktor.adminEmail"
-            ).getString())
+            .withSubject(
+                env.config.property(
+                    "ktor.adminEmail"
+                ).getString()
+            )
             .sign(
                 Algorithm.RSA256(
                     null, get { parametersOf(env) }
@@ -74,4 +79,23 @@ private val serviceAccountModule = module {
     }
 }
 
-val modulesDI = listOf(serviceModule, serviceAccountModule)
+val authModule = module {
+    single(named("clients")) { (env: ApplicationEnvironment) ->
+        listOf(env.getProperty("androidClient"), env.getProperty("desktopClient"), env.getProperty("webClient"))
+    }
+
+    single{(env : ApplicationEnvironment) ->
+        GoogleIdTokenVerifier.Builder(
+            NetHttpTransport(),
+            GsonFactory()
+        )
+            .setAudience(get(named("clients")) { parametersOf(env) })
+            .build()
+    }
+}
+
+val modulesDI = listOf(serviceModule, serviceAccountModule, authModule)
+
+
+private fun ApplicationEnvironment.getProperty(path: String): String =
+    config.property("ktor.$path").getString()
