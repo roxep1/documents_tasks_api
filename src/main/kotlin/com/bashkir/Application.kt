@@ -20,10 +20,10 @@ fun main(args: Array<String>): Unit =
 fun Application.module() {
     connectDatabase(user = "task123", password = "b1rt4-3", database = "task123")
     createTables()
-    configureRouting()
-    configureSerialization()
     configureSessions()
     configureGoogleAuth()
+    configureRouting()
+    configureSerialization()
     configureKoin()
 
     launch{

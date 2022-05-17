@@ -34,11 +34,7 @@ private val serviceModule = module {
 private val serviceAccountModule = module {
     single { (environment: ApplicationEnvironment) ->
         GoogleCredential.fromStream(
-            FileInputStream(
-                environment.config.property(
-                    "ktor.serviceAccount"
-                ).getString()
-            )
+            FileInputStream(environment.getProperty("serviceAccount"))
         ).serviceAccountPrivateKey as RSAPrivateKey
     }
 
@@ -52,11 +48,7 @@ private val serviceAccountModule = module {
             .withAudience("https://oauth2.googleapis.com/token")
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .withIssuedAt(Date(System.currentTimeMillis()))
-            .withSubject(
-                env.config.property(
-                    "ktor.adminEmail"
-                ).getString()
-            )
+            .withSubject(env.getProperty("adminEmail"))
             .sign(
                 Algorithm.RSA256(
                     null, get { parametersOf(env) }
@@ -84,12 +76,13 @@ val authModule = module {
         listOf(env.getProperty("androidClient"), env.getProperty("desktopClient"), env.getProperty("webClient"))
     }
 
-    single{(env : ApplicationEnvironment) ->
+    single { (env: ApplicationEnvironment) ->
+        val clients: List<String> = get(named("clients")) { parametersOf(env) }
         GoogleIdTokenVerifier.Builder(
             NetHttpTransport(),
             GsonFactory()
         )
-            .setAudience(get(named("clients")) { parametersOf(env) })
+            .setAudience(clients)
             .build()
     }
 }
