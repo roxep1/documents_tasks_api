@@ -98,7 +98,10 @@ suspend fun Application.writeUsers() = coroutineScope {
 @OptIn(ExperimentalTime::class)
 tailrec suspend fun Application.scheduleUpdateUsers() {
     coroutineScope {
-        launch { writeUsers() }
+        launch {
+            writeUsers()
+            println("Запись пользователей завершена.")
+        }
         delay(1.days)
     }
     scheduleUpdateUsers()

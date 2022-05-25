@@ -1,7 +1,6 @@
 package com.bashkir.plugins
 
 import com.bashkir.services.UserService
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -17,35 +16,38 @@ fun Application.configureGoogleAuth() {
     val verifier: GoogleIdTokenVerifier by inject { parametersOf(environment) }
     val userService: UserService by inject()
 
-    fun isExist(token: GoogleIdToken?): Boolean =
-        token != null && userService.getUser(token.payload.subject) != null
-
-    fun isVerified(token: String): Boolean = isExist(verifier.verify(token))
-
     install(Authentication) {
         session<UserSession> {
             validate { session ->
-                if (isVerified(session.accessToken))
-                    session
-                else
-                    null
+                session
             }
 
             challenge {
-                call.respond(HttpStatusCode.Unauthorized)
+                call.respond(HttpStatusCode.Forbidden)
+                println("Нет данных авторизации. ${it.toString()}")
             }
         }
     }
 
     routing {
         post("login") {
-            val token: String = call.receive()
+            val params = call.receiveParameters()
+            val token: String = params["idToken"].toString()
             val verifiedToken = verifier.verify(token)
-            if (isExist(verifiedToken)) {
-                call.sessions.set(UserSession(token, verifiedToken.payload.subject))
-                call.respond(HttpStatusCode.OK)
-            } else
-                call.respond(HttpStatusCode.BadRequest)
+
+            when {
+                verifiedToken == null -> call.respond(HttpStatusCode.BadRequest)
+                userService.getUser(verifiedToken.payload.subject) == null -> {
+                    call.respond(HttpStatusCode.Forbidden)
+                    println("Пользователя нет в базе данных.")
+                }
+                else -> {
+                    val userId = verifiedToken.payload.subject
+                    call.sessions.getOrSet{ UserSession(token, userId) }
+                    call.respond(userService.getUser(userId)!!)
+                }
+            }
         }
     }
+
 }

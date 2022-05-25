@@ -80,7 +80,7 @@ val authModule = module {
         val clients: List<String> = get(named("clients")) { parametersOf(env) }
         GoogleIdTokenVerifier.Builder(
             NetHttpTransport(),
-            GsonFactory()
+            GsonFactory.getDefaultInstance()
         )
             .setAudience(clients)
             .build()
