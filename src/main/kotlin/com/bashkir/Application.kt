@@ -9,7 +9,15 @@ import com.bashkir.plugins.configureRouting
 import com.bashkir.plugins.configureSerialization
 import com.bashkir.plugins.configureSessions
 import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.http.ContentDisposition.Companion.File
+import io.ktor.http.content.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import kotlinx.coroutines.launch
+import java.io.File
 
 
 fun main(args: Array<String>): Unit =
@@ -18,7 +26,7 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused")
 fun Application.module() {
-    connectDatabase(user = "task123", password = "b1rt4-3", database = "task123")
+    connectDatabase()
     createTables()
     configureSessions()
     configureGoogleAuth()

@@ -2,19 +2,22 @@ package com.bashkir.services
 
 import com.bashkir.models.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.java.KoinJavaComponent.inject
 import java.time.LocalDateTime
 
 class TaskService {
-    fun addTask(model: Task.Model) = transaction {
+    private val documentService: DocumentService by inject(DocumentService::class.java)
+
+    fun addTask(model: TaskWithFiles) = transaction {
         val task = Task.new {
-            title = model.title!!
-            desc = model.desc!!
+            title = model.task.title!!
+            desc = model.task.desc!!
             created = LocalDateTime.now()
-            deadline = LocalDateTime.parse(model.deadline)
-            author = User[model.author!!.id!!]
+            deadline = LocalDateTime.parse(model.task.deadline)
+            author = User[model.task.author!!.id!!]
         }
 
-        model.performs.forEach { performer ->
+        model.task.performs.forEach { performer ->
             Perform.new {
                 user = User[performer.user!!.id!!]
                 this.task = task
@@ -22,6 +25,10 @@ class TaskService {
                 comment = null
                 statusChanged = null
             }
+        }
+
+        model.task.documents.forEachIndexed { index, document ->
+            documentService.addDocument(DocumentWithFile(document, model.files[index]))
         }
     }
 

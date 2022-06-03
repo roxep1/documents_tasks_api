@@ -25,6 +25,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
     var deadline by TaskTable.deadline
     var author by User referencedOn TaskTable.author
     val performs by Perform referrersOn PerformTable.task
+    val documents by Document optionalReferrersOn DocumentTable.task
 
     @Serializable
     data class Model(@Transient val model: Task? = null) {
@@ -35,6 +36,7 @@ class Task(id: EntityID<Int>) : IntEntity(id) {
         val deadline = model?.deadline?.toString()
         val author = model?.author?.toModel()
         val performs = model?.performs?.map { it.toModel() } ?: listOf()
+        val documents = model?.documents?.map { it.toModel() } ?: listOf()
     }
 
     fun toModel(): Model = Model(this)

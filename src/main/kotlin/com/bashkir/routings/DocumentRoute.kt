@@ -1,9 +1,12 @@
 package com.bashkir.routings
 
 import com.bashkir.extensions.withId
+import com.bashkir.models.Document
 import com.bashkir.services.DocumentService
 import io.ktor.application.*
 import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.http.content.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -12,19 +15,18 @@ import org.koin.ktor.ext.inject
 fun Route.documentRoute() {
     val service: DocumentService by inject()
 
-    get("documents"){
+    get("documents") {
         call.respond(service.getAllDocuments())
     }
 
     route("document") {
-
 
         /* В моделе документа не нужно заполнять created, desc нулабельный.
         В моделях familiarize нужно заполнить только id юзера и документа.
         В моделях agreement не нужно заполнять status, comment, created, statusChanged */
         post {
             service.addDocument(call.receive())
-            call.respond(HttpStatusCode.OK)
+            call.respond(OK)
         }
 
         /* Принимает List<Int> с айдишниками документов. Возвращает List<Document> */
@@ -32,14 +34,32 @@ fun Route.documentRoute() {
             call.respond(service.getAllDocuments(call.receive()))
         }
 
-        put{
-            service.updateDocument(call.receive())
-            call.respond(HttpStatusCode.OK)
-        }
 
-        get("{id}") {
-            withId {
-                call.respond(service.getDocument(it))
+        route("{id}") {
+            get {
+                withId {
+                    call.respond(service.getDocument(it))
+                }
+            }
+
+            delete{
+                withId {
+                    service.deleteDocument(it)
+                    call.respond(OK)
+                }
+            }
+
+            put {
+                withId {
+                    service.updateDocument(it, call.receive())
+                    call.respond(OK)
+                }
+            }
+
+            get("file") {
+                withId {
+                    call.respond(service.getFile(it))
+                }
             }
         }
 
@@ -56,7 +76,7 @@ fun Route.documentRoute() {
             * Принимает List<Int> через тело запроса */
             put {
                 service.familiarizeAll(call.receive())
-                call.respond(HttpStatusCode.OK)
+                call.respond(OK)
             }
         }
 
@@ -71,14 +91,14 @@ fun Route.documentRoute() {
                     service.changeAgreementStatus(it, call.receive())
                 else
                     service.changeAgreementStatus(it, call.receive(), comment)
-                call.respond(HttpStatusCode.OK)
+                call.respond(OK)
             }
         }
 
         post("perform/{id}") {
             withId {
                 service.addDocumentToPerform(it, call.receive())
-                call.respond(HttpStatusCode.OK)
+                call.respond(OK)
             }
         }
     }

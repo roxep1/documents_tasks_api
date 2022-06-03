@@ -57,6 +57,7 @@ fun createTables() = transaction {
 
     SchemaUtils.createMissingTablesAndColumns(
         AgreementTable,
+        FileTable,
         DocumentTable,
         FamiliarizeTable,
         PerformTable,
@@ -65,6 +66,11 @@ fun createTables() = transaction {
         TemplateTable,
         UserTable
     )
+    if (Role.findById("Admin") == null)
+        Role.new("Admin") {}
+
+    if (Role.findById("Employee") == null)
+        Role.new("Employee") {}
 }
 
 private suspend fun Application.authorizeService(): String {

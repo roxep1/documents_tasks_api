@@ -2,12 +2,15 @@ package com.bashkir.routings
 
 import com.bashkir.extensions.withStringId
 import com.bashkir.extensions.withUserId
+import com.bashkir.plugins.UserSession
 import com.bashkir.services.UserService
 import io.ktor.application.*
 import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import org.koin.ktor.ext.inject
 
 fun Route.userRoute() {
@@ -15,6 +18,11 @@ fun Route.userRoute() {
 
     get("users") {
         call.respond(service.getAllUsers())
+    }
+
+    get("logout"){
+        call.sessions.clear<UserSession>()
+        call.respond(OK)
     }
 
     route("user") {
@@ -69,7 +77,7 @@ fun Route.userRoute() {
             put {
                 withStringId {
                     service.setRole(it, call.receive())
-                    call.respond(HttpStatusCode.OK)
+                    call.respond(OK)
                 }
             }
 

@@ -6,9 +6,7 @@ import io.ktor.sessions.*
 
 fun Application.configureSessions() =
     install(Sessions) {
-        cookie<UserSession>("user_session", SessionStorageMemory()){
-            cookie.secure = true
-        }
+        cookie<UserSession>("user_session", SessionStorageMemory())
     }
 
 data class UserSession(val accessToken: String, val userId: String) : Principal

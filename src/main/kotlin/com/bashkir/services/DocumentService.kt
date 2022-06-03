@@ -5,33 +5,45 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
 class DocumentService {
-    fun addDocument(model: Document.Model): Document = transaction {
-        val doc = Document.new {
-            model.templateId?.let {
-                template = Template[model.templateId]
+    fun addDocument(model: DocumentWithFile): Document {
+        val file = transaction {
+            File.new {
+                name = model.file.name!!
+                size = model.file.size
+                file = model.file.file!!
+                extension = model.file.extension!!
             }
-            author = User[model.author!!.id!!]
-            title = model.title!!
-            file = model.file!!
-            desc = model.desc
-            created = LocalDateTime.now()
-            ext = model.extension!!
         }
 
-        model.familiarize.forEach {
-            newFamiliarizeFromModel(it, doc)
-        }
+        return transaction {
+            val doc = Document.new {
+                model.document.templateId?.let {
+                    template = Template[model.document.templateId]
+                }
+                this.file = file
+                author = User[model.document.author!!.id!!]
+                title = model.document.title!!
+                desc = model.document.desc
+                created = LocalDateTime.now()
+            }
 
-        model.agreement.forEach {
-            newAgreementFromModel(it, doc)
+            model.document.familiarize.forEach {
+                newFamiliarizeFromModel(it, doc)
+            }
+
+            model.document.agreement.forEach {
+                newAgreementFromModel(it, doc)
+            }
+            doc
         }
-        doc
     }
 
 
     fun getAllDocuments(): List<Document.Model> = transaction { Document.all().map { it.toModel() } }
 
     fun getDocument(id: Int): Document.Model = transaction { Document[id].toModel() }
+
+    fun getFile(id: Int): File.Model = transaction { Document[id].file.toModel() }
 
     fun getAllDocuments(ids: List<Int>): List<Document.Model?> = ids.map { getDocument(it) }
 
@@ -55,38 +67,16 @@ class DocumentService {
             changeAgreementStatus(agreementId, status).comment = comment
         }
 
-    fun addDocumentToPerform(performId: Int, document: Document.Model) = transaction {
-        addDocument(document).perform = Perform[performId]
+    fun addDocumentToPerform(performId: Int, model: DocumentWithFile) = transaction {
+        addDocument(model).perform = Perform[performId]
     }
 
-    fun updateDocument(model: Document.Model) = transaction {
-        Document[model.id].run {
-            model.templateId?.let {
-                template = Template[model.templateId]
-            }
-            title = model.title!!
-            file = model.file!!
-            desc = model.desc
-            ext = model.extension!!
-
-            familiarize.map { it.user.id.value }.let { ids ->
-                model.familiarize.forEach {
-                    if (!ids.contains(it.user!!.id!!))
-                        newFamiliarizeFromModel(it, this)
-                }
-            }
-            agreement.map { it.user.id.value }.let { ids ->
-                model.agreement.forEach {
-                    if (!ids.contains(it.user!!.id!!))
-                        newAgreementFromModel(it, this)
-                }
-            }
-            familiarize.forEach {
-                it.checked = false
-            }
-            agreement.forEach {
-                it.status = AgreementStatus.Sent
-            }
+    fun updateDocument(id: Int, fileModel: File.Model) = transaction {
+        Document[id].file.run {
+            name = fileModel.name!!
+            size = fileModel.size
+            file = fileModel.file!!
+            extension = fileModel.extension!!
         }
     }
 
@@ -110,4 +100,6 @@ class DocumentService {
             statusChanged = null
         }
     }
+
+    fun deleteDocument(id: Int) = transaction { Document[id].delete() }
 }
