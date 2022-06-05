@@ -28,7 +28,7 @@ class TaskService {
         }
 
         model.task.documents.forEachIndexed { index, document ->
-            documentService.addDocument(DocumentWithFile(document, model.files[index]))
+            documentService.addDocument(DocumentWithFile(document, model.files[index])).task = task
         }
     }
 

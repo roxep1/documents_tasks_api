@@ -20,7 +20,7 @@ fun Route.userRoute() {
         call.respond(service.getAllUsers())
     }
 
-    get("logout"){
+    get("logout") {
         call.sessions.clear<UserSession>()
         call.respond(OK)
     }
@@ -44,9 +44,17 @@ fun Route.userRoute() {
             }
         }
 
-        get("documents"){
-            withUserId{
-                call.respond(service.getAllMyDocuments(it))
+        route("documents") {
+            get {
+                withUserId {
+                    call.respond(service.getAllMyDocuments(it))
+                }
+            }
+
+            get("created"){
+                withUserId {
+                    call.respond(service.getCreatedDocuments(it))
+                }
             }
         }
 

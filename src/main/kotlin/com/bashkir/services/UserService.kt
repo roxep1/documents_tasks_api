@@ -36,10 +36,11 @@ class UserService {
     fun getAllMyDocuments(id: String): List<Document.Model> =
         transaction {
             User[id].run {
-                givenTasks.asSequence().map { it.performs }.flatten().plus(tasksToDo)
+                givenTasks.asSequence().map { it.performs }.flatten()
                     .map { it.documents }.flatten().plus(
                         createdDocuments
-                    ).map { it.toModel()}.toList()
+                    ).plus(tasksToDo.map { it.task.documents }.flatten()).map { it.toModel() }
+                    .toList()
             }
         }
 
