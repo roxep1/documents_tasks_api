@@ -49,6 +49,7 @@ class TaskService {
         Task[id].run {
             Document.find { DocumentTable.perform inList performs.map { it.id } }.forEach { it.delete() }
             performs.forEach { it.delete() }
+            documents.forEach { it.delete() }
             delete()
         }
     }

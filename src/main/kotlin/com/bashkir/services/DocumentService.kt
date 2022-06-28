@@ -101,5 +101,13 @@ class DocumentService {
         }
     }
 
-    fun deleteDocument(id: Int) = transaction { Document[id].delete() }
+    fun deleteDocument(id: Int) = transaction {
+        Document[id].run{
+            val fileId = file.id
+            agreement.forEach{ it.delete()}
+            familiarize.forEach { it.delete() }
+            delete()
+            File[fileId].delete()
+        }
+    }
 }
